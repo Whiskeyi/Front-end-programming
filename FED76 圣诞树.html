@@ -1,0 +1,55 @@
+<!-- 描述
+圣诞节来啦！请用CSS给你的朋友们制作一颗圣诞树吧~这颗圣诞树描述起来是这样的：
+1. "topbranch"是圣诞树的上枝叶，该上枝叶仅通过边框属性、左浮动、左外边距即可实现。边框的属性依次是：宽度为100px、是直线、颜色为green（未显示的边框颜色都为透明）
+2. "middleBranch"是圣诞树的中枝叶，该上枝叶仅通过边框属性即可实现。边框的属性依次是：宽度为200px、是直线、颜色为green（未显示的边框颜色都为透明）
+3. "base"是圣诞树的树干，该树干仅通过左外边距实现居中于中枝叶。树干的宽度、高度分别为70px、200px，颜色为gray。
+注意：
+1. 上枝叶、树干的居中都是通过左外边距实现的
+2. 没有显示的边框，其属性都是透明（属性）
+3. 仅通过border属性完成边框的所有属性设置 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .topbranch {
+                width: 0px;
+                height: 0px;
+                border: 100px solid;
+                margin-left: 100px;
+                float: left;
+                border-color: transparent transparent green transparent;
+                /*
+                * TODO: 上枝叶效果
+                */
+            }
+            .middleBranch {
+                width: 0px;
+                height: 0px;
+                border: 200px solid;
+                border-color: transparent transparent green transparent;
+                /*
+                * TODO: 中枝叶效果
+                */
+            }
+            .base {
+                width: 70px;
+                height: 200px;
+                background-color: gray;
+                margin-left: 165px
+                /*
+                * TODO: 树干效果
+                */
+            }
+    </style>
+</head>
+<body>
+    <section class="topbranch"></section>
+    <section class="middleBranch"></section>
+    <section class="base"></section>
+</body>
+</html>
