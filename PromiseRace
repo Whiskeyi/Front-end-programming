@@ -1,0 +1,19 @@
+function PromiseRace(array) {
+    if(!Array.isArray(array)) {
+        return reject(new Error('not an array!'));
+    }
+    array = Array.from(array);
+    return new Promise((resolve, reject) => {
+        if(array.length === 0) {
+            // pending
+        } else {
+            for(let i = 0; i < array.length; i++) {
+                Promise.resolve(array[i]).then((value) => {
+                    resolve(value);
+                }).catch((reason) => {
+                    reject(reason);
+                })
+            }
+        }
+    })
+}
