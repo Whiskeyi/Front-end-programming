@@ -1,23 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .container{
-            display: flex;
+        .father {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            /* padding: 20px; */
+            background-color: gray;
+            padding: 0 100px;
         }
-        .container > div {
+
+        .son {
+            /* position: relative; */
+            /* left: 40%; */
+            position: absolute;
+            left: 50%;
+            height: 100px;
             width: 100px;
+            background-color: bisque;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div style="height: 100px;background-color: brown;"></div>
-        <div style="min-height: 10px;background-color: aquamarine;"></div>
+    <div class="father">
+        <div class="son"></div>
     </div>
 </body>
+
+<script>
+    var x = 3, obj = {
+        x: 5
+    }
+    obj.fn = (function () {
+        this.x *= ++x;
+        return function (y) {
+            this.x *= (++x) + y
+            console.log(x)
+        }
+    })()
+    var fn = obj.fn;
+    obj.fn(6);
+    fn(4);
+</script>
+
 </html>

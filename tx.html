@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset=utf-8>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    #scrollcompare {
+      width: 600px;
+      height: 600px;
+      box-shadow: 1px 1px 3px #333;
+      position: absolute;
+      top: 30px;
+      left: 30px;
+    }
+
+    #scrollcompare div {
+      position: absolute;
+      height: 600px;
+      width: 600px;
+      overflow: hidden;
+      background-size: contain;
+    }
+
+    #scrollcompare .top {
+      z-index: 3;
+    }
+
+    #scrollcompare .middle {
+      z-index: 2;
+    }
+
+    #scrollcompare .bottom {
+      z-index: 1;
+    }
+
+    #scrollcompare div img {
+      height: 100%;
+    }
+
+    #scrollcompare .topmiddlescroll {
+      width: 10px;
+      height: 100%;
+      position: absolute;
+      left: 580px;
+      background-color: #34495e;
+      z-index: 4;
+    }
+
+    #scrollcompare .middlebottomscroll {
+      width: 10px;
+      height: 100%;
+      position: absolute;
+      left: 590px;
+      background-color: #2c3e50;
+      z-index: 4;
+    }
+  </style>
+</head>
+
+<body>
+  <section id="scrollcompare"></section>
+
+  <script type="text/javascript">
+    var scrollcompare = {
+      init(param) {
+        const el = param.el
+        const src = param.src
+        if (!el || !src) return
+        this.createElement(el, src)
+      },
+      createElement(el, src) {
+        for (const item in src) {
+          const div = document.createElement('div')
+          div.className = item
+          const img = document.createElement('img')
+          img.src = src[item]
+          img.draggable = false
+          div.appendChild(img)
+          el.appendChild(div)
+        }
+        const topmiddlescroll = document.createElement('div')
+        topmiddlescroll.className = 'topmiddlescroll'
+        el.appendChild(topmiddlescroll)
+
+        const middlebottomscroll = document.createElement('div')
+        middlebottomscroll.className = 'middlebottomscroll'
+        el.appendChild(middlebottomscroll)
+
+        this.createEvent(el)
+      },
+      createEvent(el) {
+        const _this = this
+        // TODO: 根据createElement中的代码逻辑，分别获取类名为：top、middle、bottom、topmiddlescroll、middlebottomscroll的节点，且变量名为类名
+        const top = document.getElementsByClassName('top')[0];
+        const middle = document.getElementsByClassName('middle')[0];
+        const bottom = document.getElementsByClassName('bottom')[0];
+        const topmiddlescroll = document.getElementsByClassName('topmiddlescroll')[0];
+        const middlebottomscroll = document.getElementsByClassName('middlebottomscroll')[0];
+
+        let isActive = false
+        topmiddlescroll.addEventListener('mousedown', () => isActive = 'topmiddlescroll')
+        middlebottomscroll.addEventListener('mousedown', () => isActive = 'middlebottomscroll')
+        el.addEventListener('mouseup', () => isActive = false)
+        el.addEventListener('mouseleave', () => isActive = false)
+        el.addEventListener('mousemove', () => {
+          if (!isActive) return
+          event.preventDefault()
+          _moveHandler(event)
+        })
+
+        function _moveHandler(event) {
+          _this.moveHandler(top, middle, bottom, topmiddlescroll, middlebottomscroll, event.pageX, el.offsetWidth, el.offsetLeft, isActive)
+        }
+      },
+      moveHandler(top, middle, bottom, topmiddlescroll, middlebottomscroll, pageX, elWidth, elLeft, isActive) {
+        // tip：该方法的参数分别代表：顶层图片节点、中间图片节点、底层图片节点、左滑块、右滑块、鼠标距离页面左边的距离、该模块宽度、该模块距离页面左边的距离、点击是否激活
+
+        let transform = Math.max(0, (Math.min(pageX - elLeft, elWidth)))
+        if (isActive === 'topmiddlescroll') {
+          if (transform >= 580) {
+            top.style.width = '580px'
+            topmiddlescroll.style.left = '580px'
+          } else {
+            top.style.width = transform + 'px'
+            topmiddlescroll.style.left = transform + 'px'
+          }
+          if (parseInt(topmiddlescroll.style.left) >= parseInt(window.getComputedStyle(middlebottomscroll).left) - 10) {
+            // TODO: 完善当左滑块在滑动时遇到右滑块后，右滑块的滑动逻辑
+            middlebottomscroll.style.left = parseInt(topmiddlescroll.style.left) + 10 + 'px'
+            middle.style.width = middlebottomscroll.style.left
+          }
+        }
+
+        if (isActive === 'middlebottomscroll') {
+          if (transform >= 590) {
+            // TODO: 完善当右滑块碰到模块的右边时，临界的处理逻辑
+            middle.style.width = '590px'
+            middlebottomscroll.style.left = '590px'
+          } else if (transform <= 10) {
+            // TODO: 完善当右滑块处在该模块的最左边时，临界的处理逻辑
+            middle.style.width = '10px'
+            middlebottomscroll.style.left = '10px'
+          } else {
+            middle.style.width = transform + 'px'
+            middlebottomscroll.style.left = transform + 'px'
+          }
+          if (parseInt(middlebottomscroll.style.left) <= parseInt(window.getComputedStyle(topmiddlescroll).left) + 10) {
+            topmiddlescroll.style.left = parseInt(middlebottomscroll.style.left) - 10 + 'px'
+            top.style.width = topmiddlescroll.style.left
+          }
+        }
+      }
+    }
+    scrollcompare.init({
+      // TODO: 请获取id=scrollcompare的节点
+      el: document.getElementById('scrollcompare'),
+      src: {
+        top: 'https://uploadfiles.nowcoder.com/images/20220110/644558031_1641797560274/59B2900AA03CB2182A51CDB520B535B6',
+        middle: 'https://uploadfiles.nowcoder.com/images/20220110/644558031_1641797560290/7134F8F5ACED525D1C11D229063305E7',
+        bottom: 'https://uploadfiles.nowcoder.com/images/20220110/644558031_1641797560475/7D2045F2F6E5418B752005EED8758311'
+      }
+    })
+  </script>
+</body>
+
+</html>
